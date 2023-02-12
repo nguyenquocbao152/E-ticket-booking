@@ -20,21 +20,21 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
         ResponseEntity responseEntity = null;
-        try{
-            if (request.getPhoneNumber().isEmpty() || request.getPassword().isEmpty()){
+        try {
+            if (request.getPhoneNumber().isEmpty() || request.getPassword().isEmpty()) {
                 responseEntity = ResponseEntity.status(417).body(CommonClass.notEmpty());
-            }else {
+            } else {
                 CommonResponse response = userService.loginUser(request);
-                if (response.getStatus() == 200){
+                if (response.getStatus() == 200) {
                     responseEntity = ResponseEntity.status(200).body(response);
                 } else if (response.getStatus() == 417) {
                     responseEntity = ResponseEntity.status(417).body(response);
                 }
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             return responseEntity;
         }
     }
@@ -43,21 +43,21 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequest request) {
         ResponseEntity responseEntity = null;
-        try{
+        try {
             if (request.getPhoneNumber().isEmpty() || request.getPassword().isEmpty() ||
-                    request.getEmail().isEmpty() || request.getFullname().isEmpty() || request.getGender().isEmpty()){
+                    request.getEmail().isEmpty() || request.getFullname().isEmpty() || request.getGender().isEmpty()) {
                 responseEntity = ResponseEntity.status(417).body(CommonClass.notEmpty());
-            }else {
+            } else {
                 CommonResponse response = userService.registerUser(request);
-                if (response.getStatus() == 200){
-                    responseEntity =  ResponseEntity.status(200).body(response);
+                if (response.getStatus() == 200) {
+                    responseEntity = ResponseEntity.status(200).body(response);
                 } else if (response.getStatus() == 417) {
                     responseEntity = ResponseEntity.status(417).body(response);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             return responseEntity;
         }
 
