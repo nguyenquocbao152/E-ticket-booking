@@ -1,14 +1,13 @@
 package com.example.ticketbooking.controller;
 
-
-import com.example.ticketbooking.common.CommonClass;
-import com.example.ticketbooking.entity.Route;
-import com.example.ticketbooking.model.request.RouteCreateRequest;
-import com.example.ticketbooking.model.request.RouteUpdateRequest;
-import com.example.ticketbooking.model.request.UserLoginRequest;
+import com.example.ticketbooking.entity.FeedBack;
+import com.example.ticketbooking.entity.Trip;
+import com.example.ticketbooking.model.request.FeedBackCreateRequest;
+import com.example.ticketbooking.model.request.FeedBackUpdateRequest;
+import com.example.ticketbooking.model.request.TripCreateRequest;
+import com.example.ticketbooking.model.request.TripUpdateRequest;
 import com.example.ticketbooking.model.response.CommonResponse;
-import com.example.ticketbooking.model.response.RouteDataResponse;
-import com.example.ticketbooking.service.RouteService;
+import com.example.ticketbooking.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +15,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/route")
-public class RouteController {
+@RequestMapping("/feedback")
+public class FeedbackController {
 
     @Autowired
-    RouteService routeService;
+    FeedbackService feedbackService;
 
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/getAllRoutes")
-    public ResponseEntity<?> getAllRoutes() {
+    @PostMapping("/getAllFeedBack")
+    public ResponseEntity<?> getAllFeedBack() {
         ResponseEntity responseEntity = null;
         try{
-            List<Route> responses = routeService.getAllRoute();
+            List<FeedBack> responses = feedbackService.getAllFeedBack();
             if (responses != null){
                 responseEntity =  ResponseEntity.status(200).body(responses);
             }
@@ -40,29 +39,11 @@ public class RouteController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/getRouteById")
-    public ResponseEntity<?> getRouteById(@RequestParam String routeId) {
+    @PostMapping("/createFeedBack")
+    public ResponseEntity<?> createFeedBack(@RequestBody FeedBackCreateRequest request) {
         ResponseEntity responseEntity = null;
         try{
-            RouteDataResponse response = routeService.getRouteById(routeId);
-            if (response.getRouteId() != null){
-                responseEntity =  ResponseEntity.status(200).body(response);
-            }else {
-                responseEntity =  ResponseEntity.status(417).body(response);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            return responseEntity;
-        }
-    }
-
-    @CrossOrigin(origins = "*")
-    @PostMapping("/createRoute")
-    public ResponseEntity<?> createRoute(@RequestBody RouteCreateRequest request) {
-        ResponseEntity responseEntity = null;
-        try{
-            CommonResponse responses = routeService.createRoute(request);
+            CommonResponse responses = feedbackService.createFeedBack(request);
             if (responses.getStatus() == 200){
                 responseEntity =  ResponseEntity.status(200).body(responses);
             }else{
@@ -76,11 +57,11 @@ public class RouteController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/updateRoute")
-    public ResponseEntity<?> updateRoute(@RequestBody RouteUpdateRequest request) {
+    @PostMapping("/updateFeedBack")
+    public ResponseEntity<?> updateFeedBack(@RequestBody FeedBackUpdateRequest request) {
         ResponseEntity responseEntity = null;
         try{
-            CommonResponse responses = routeService.updateRoute(request);
+            CommonResponse responses = feedbackService.updateFeedBack(request);
             if (responses.getStatus() == 200){
                 responseEntity =  ResponseEntity.status(200).body(responses);
             }else{
@@ -94,11 +75,11 @@ public class RouteController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/deleteRoute")
-    public ResponseEntity<?> deleteRoute(@RequestParam String routeId) {
+    @PostMapping("/deleteFeedBack")
+    public ResponseEntity<?> deleteTrip(@RequestParam String feedBackId) {
         ResponseEntity responseEntity = null;
         try{
-            CommonResponse responses = routeService.deleteRoute(routeId);
+            CommonResponse responses = feedbackService.deleteFeedBack(feedBackId);
             if (responses.getStatus() == 200){
                 responseEntity =  ResponseEntity.status(200).body(responses);
             }else{
