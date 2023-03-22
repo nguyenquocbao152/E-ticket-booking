@@ -1,9 +1,6 @@
 package com.example.ticketbooking.service.impl;
 
-import com.example.ticketbooking.entity.Route;
-import com.example.ticketbooking.entity.Station;
-import com.example.ticketbooking.entity.Trip;
-import com.example.ticketbooking.entity.Vehicle;
+import com.example.ticketbooking.entity.*;
 import com.example.ticketbooking.model.request.TripCreateRequest;
 import com.example.ticketbooking.model.request.TripDataRequest;
 import com.example.ticketbooking.model.request.TripUpdateRequest;
@@ -17,10 +14,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class TripServiceImpl implements TripService {
@@ -57,16 +51,19 @@ public class TripServiceImpl implements TripService {
                 data.setVehicleId(tripList.get(i).getVehicalId());
                 Vehicle vehicle = vehicleRepository.getVehicleById(tripList.get(i).getVehicalId());
                 if (vehicle != null){
+                    data.setVehicleId(vehicle.getVehicalId());
                     data.setLiencePlate(vehicle.getLicensePlates());
                 }
                 Route route = routeRepository.getRouteByRouteId(tripList.get(i).getRouteId());
                 if(route != null){
+                    data.setRouteId(route.getRouteId());
                     data.setFrom(route.getFrom());
                     data.setArrival(route.getArrive());
                     data.setFare(route.getFare());
                 }
                 Station station = stationRepository.getSationByStationId(tripList.get(i).getStationId());
                 if(station != null){
+                    data.setStationId(station.getStationId());
                     data.setStationStart(station.getStationStart());
                     data.setStationEnd(station.getStationEnd());
                 }
@@ -172,16 +169,19 @@ public class TripServiceImpl implements TripService {
                     data.setTime(tripList.get(i).getTime());
                     Vehicle vehicle = vehicleRepository.getVehicleById(tripList.get(i).getVehicalId());
                     if (vehicle != null){
+                        data.setVehicleId(vehicle.getVehicalId());
                         data.setLiencePlate(vehicle.getLicensePlates());
                     }
                     Route route = routeRepository.getRouteByRouteId(tripList.get(i).getRouteId());
                     if(route != null){
+                        data.setRouteId(route.getRouteId());
                         data.setFrom(route.getFrom());
                         data.setArrival(route.getArrive());
                         data.setFare(route.getFare());
                     }
                     Station station = stationRepository.getSationByStationId(tripList.get(i).getStationId());
                     if(station != null){
+                        data.setStationId(station.getStationId());
                         data.setStationStart(station.getStationStart());
                         data.setStationEnd(station.getStationEnd());
                     }
@@ -200,4 +200,39 @@ public class TripServiceImpl implements TripService {
 
 
     }
+
+    // This method is used to cancel the ticket.
+    @Override
+    public void cancelTicket() throws ParseException {
+        // TODO document why this method is empty
+        Date today = new Date();
+        String date = formater.format(today);
+        List<String> tripIdList = tripRepository.getAllDate(LocalDate.parse(date));
+
+        for (int i = 0; i < tripIdList.size(); i ++){
+            List<Ticket> ticketList = ticketRepository.getAllTicketByTripId(tripIdList.get(i));
+            if (ticketList != null){
+                for (int j = 0; j < ticketList.size(); j++){
+                    ticketList.get(j).setStatus("expired");
+                    // Saving the ticket to the database.
+                    ticketRepository.save(ticketList.get(j));
+                }
+            }
+        }
+
+
+    }
+
+    @Override
+    public Trip getTripByTripId(String tripId) {
+            Trip trip = null;
+            try{
+                trip = tripRepository.findById(tripId).get();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return  trip;
+    }
+
+
 }
